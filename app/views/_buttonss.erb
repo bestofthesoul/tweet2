@@ -1,0 +1,8 @@
+  
+  <% if login? %>
+    <a href="/logout"><input class="button2" type="submit" value="Logout"></a>
+    <div>Hi, <%= username.upcase %></div>
+  <% else %>
+  	<a href='/login'><input class="button2" type="submit" value="Link Twitter"></a>
+  <% end %>
+  

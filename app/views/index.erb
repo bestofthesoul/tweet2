@@ -1,0 +1,127 @@
+<div class="container0">
+  <%= erb :_buttonss %>
+</div>
+
+<% if login? %>
+  <div class="container1">
+    <h2> How do you feel today?</h2>
+      <b>Instant TWEET</b>
+      <form id="post_tweet" method="post" action="/tweet" >
+        <table border="0"><tr>
+          <td><textarea name="a" rows="4" cols="60"></textarea></td>
+        </tr></table>
+        <input class="button1" type="submit" value="Post Now"><br><br><br>
+      </form>
+
+      <b>Post TWEET</b>
+      <form id="post_tweet_later" method="post" action="/tweet_later" >
+        <table border="0"><tr>
+          <td><textarea name="b" rows="4" cols="40"></textarea></td>
+          <td></td>
+          <td></td>
+          <td>Post After: <input type="number" min="0" step="1" name="time" size="3">(Seconds)</td>
+        </tr></table>
+        <input class="button1" type="submit" value="Post Later">
+      </form> 
+
+      <br>
+     
+  </div>
+
+ <center><div id="status"></div></center>
+
+  <div id="show_tweet">
+  </div>
+
+  <div id="ajax_loader">
+    <img src="/images/ajax-loader.gif"> Loading...</img>
+  </div>
+
+<% end %>
+
+
+
+<script>
+  $(document).ready(function(){ 
+    populate_tweets();
+    function populate_tweets(){
+      console.log("pop tweets main page")
+      $.ajax({
+        url:'/tweets',
+        type: "GET",
+        success:function(result){
+          $("#show_tweet").html(result);
+          $("#status").html('Updated tweets');
+          $("#ajax_loader").hide();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          $("#ajax_loader").hide();
+        }
+      });
+    };
+
+    function check_job_status(job_id){
+      var request = $.ajax({
+        type: "GET",
+        url: '/status/' + job_id
+      });
+      request.done(function(response){
+        if (response === 'true'){
+          $("#status").html('');     
+        populate_tweets();
+        } 
+        else {
+          setTimeout(function(){ check_job_status(job_id) }, 1000);
+        }
+      });
+    };
+
+
+
+    $("#post_tweet").submit(function(e){ 
+      e.preventDefault();
+      console.log("post tweet now")
+      $('#status').show();
+      $("#ajax_loader").show();
+      var postData = $(this).serializeArray();
+      var formURL = $(this).attr("action");
+      $.ajax({
+        url : formURL,
+        type: "POST",
+        data : postData,
+        success:function(result){
+          $("#status").html('Posting Tweet NOW...');   
+          setTimeout(function(){ check_job_status(result) }, 1000);
+          populate_tweets();
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          $("#status").html('Error');
+        }
+      });
+    });
+
+    
+    $("#post_tweet_later").submit(function(e){
+      e.preventDefault();
+      console.log("post tweet late- successful")
+      $('#status').show();
+      $("#ajax_loader").show();
+      var postData = $(this).serializeArray();
+       var formURL = $(this).attr("action");
+      $.ajax({
+        url : formURL,
+        type: "POST",
+        data : postData,
+        success:function(result){
+          $("#status").html('Posting Tweet LATER...');
+          setTimeout(function(){ check_job_status(result) }, 1000);
+          populate_tweets();
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          $("#status").html('Error...');
+        }
+      });
+    });
+  });
+
+</script>

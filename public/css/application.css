@@ -1,0 +1,46 @@
+.container0 {
+	color: white;
+	font-size: 15px;
+	margin: 20px auto;
+	width: 800px;
+	height: 30px;
+	padding: 5px 5px 5px 5px;
+	border: 1px dotted black;
+	background-color: green;
+}
+
+
+.container1 {
+	color: red;
+	font-size: 15px;
+	margin: 20px auto;
+	width: 800px;
+	padding: 5px 5px 5px 5px;
+	border: 1px dotted black;
+	background-color: yellow;
+}
+
+
+#show_tweet {
+	color: white;
+	font-size: 15px;
+	margin: 5px auto;
+	width: 800px;
+	height: 200px;
+	padding: 0px 0px 0px 0px;
+	border: 1px dotted black;
+	background-color: black;
+}
+
+
+.button1, .button2 {
+	text-align: center;
+	float: right;
+}
+
+
+th, h1, h2, h3 {
+	text-align: center;
+	color: black;
+}
+
